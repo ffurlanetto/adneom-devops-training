@@ -1,13 +1,15 @@
-package com.visium360.asgard;
+package com.ffurlanetto.asgard;
 
 import com.ffurlanetto.asgard.lib.properties.MyService;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-@SpringBootApplication(scanBasePackages = "com.visium360.asgard")
+@SpringBootApplication(scanBasePackages = "com.ffurlanetto.asgard")
 @RestController
+@CrossOrigin
 public class DemoApplication {
 
     private final MyService myService;
@@ -16,7 +18,7 @@ public class DemoApplication {
         this.myService = myService;
     }
 
-    @GetMapping("/")
+    @GetMapping("/api/hello")
     public String home() {
         return myService.message();
     }

@@ -1,4 +1,4 @@
-package com.visium360.asgard;
+package com.ffurlanetto.asgard;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

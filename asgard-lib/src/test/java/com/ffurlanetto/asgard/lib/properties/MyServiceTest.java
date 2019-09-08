@@ -1,4 +1,4 @@
-package com.visium360.asgard.lib.properties;
+package com.ffurlanetto.asgard.lib.properties;
 
 import static org.assertj.core.api.Assertions.*;
 

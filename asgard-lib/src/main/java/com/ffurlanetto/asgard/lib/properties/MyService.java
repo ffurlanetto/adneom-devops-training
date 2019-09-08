@@ -1,4 +1,4 @@
-package com.visium360.asgard.lib.properties;
+package com.ffurlanetto.asgard.lib.properties;
 
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.stereotype.Service;
