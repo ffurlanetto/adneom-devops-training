@@ -13,7 +13,7 @@ node {
 yarn_install.dependsOn(yarn_cache_clean)
 task build(type: YarnTask) {
   dependsOn yarn_install
-  args = ['build']
+  args = ['build', '--prod']
 }
 task check(type: YarnTask) {
   args = ['test']

@@ -11,6 +11,6 @@ export class AppService {
   }
 
   getTitle(): Observable<string> {
-    return this.http.get<string>(this.baseUrl, {responseType: 'text'});
+    return this.http.get(this.baseUrl, {responseType: 'text'});
   }
 }
