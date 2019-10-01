@@ -39,8 +39,10 @@ pipeline {
       }
       steps {
         script {
-          sh "docker-compose start"
-          echo 'Open you browser to http://localhost:5580/'
+          dir ('/home/jenkins/session-3') {
+            sh "docker-compose up -d"
+            echo 'Open you browser to http://localhost:5580/'
+          }
         }
       }
     }

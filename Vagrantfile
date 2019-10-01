@@ -11,6 +11,8 @@ sudo sh -c 'echo deb http://pkg.jenkins.io/debian-stable binary/ > /etc/apt/sour
 sudo apt-get update
 sudo apt-get install openjdk-8-jdk-headless -y
 sudo apt-get install jenkins -y
+sudo mkdir /home/jenkins && sudo rm -rf /var/lib/jenkins/workspace && sudo ln -s /home/jenkins /var/lib/jenkins/workspace
+sudo chown -R jenkins:jenkins /home/jenkins/
 sudo systemctl start jenkins
 sudo groupadd docker
 sudo usermod -aG docker vagrant
