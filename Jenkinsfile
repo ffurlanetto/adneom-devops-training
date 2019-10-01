@@ -38,8 +38,10 @@ pipeline {
         label 'docker'
       }
       steps {
-        step([$class: 'DockerComposeBuilder', dockerComposeFile: 'docker-compose.yml', option: [$class: 'StartAllServices'], useCustomDockerComposeFile: false])
-        echo 'Open you browser to http://localhost:5580/'
+        script {
+          sh "docker-compose start"
+          echo 'Open you browser to http://localhost:5580/'
+        }
       }
     }
   }
