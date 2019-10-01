@@ -39,7 +39,7 @@ pipeline {
       }
       steps {
         script {
-          sh "docker-compose up -d"
+          sh "/snap/bin/docker-compose up -d"
           echo 'Open you browser to http://localhost:5580/'
         }
       }
