@@ -35,14 +35,12 @@ pipeline {
     }
     stage('Deploy') {
       agent {
-        label 'master'
+        label 'docker-slave'
       }
       steps {
         script {
-          dir ('/home/jenkins/session-3') {
-            sh "docker-compose up -d"
-            echo 'Open you browser to http://localhost:5580/'
-          }
+          sh "docker-compose up -d"
+          echo 'Open you browser to http://localhost:5580/'
         }
       }
     }
