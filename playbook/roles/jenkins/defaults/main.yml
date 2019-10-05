@@ -1,0 +1,60 @@
+---
+# Optional method of pinning a specific version of Jenkins and/or overriding the
+# default Jenkins packaging URL.
+# jenkins_version: "1.644"
+# jenkins_pkg_url: "https://www.example.com"
+
+# Change this to `latest` to update Jenkins if a newer version is available.
+jenkins_package_state: present
+
+jenkins_init_file: /etc/default/jenkins
+jenkins_http_port_param: HTTP_PORT
+jenkins_java_options_env_var: JAVA_ARGS
+
+jenkins_connection_delay: 5
+jenkins_connection_retries: 60
+jenkins_home: /var/lib/jenkins
+jenkins_hostname: localhost
+jenkins_http_port: 8080
+jenkins_jar_location: /opt/jenkins-cli.jar
+jenkins_url_prefix: ""
+jenkins_java_options: "-Djenkins.install.runSetupWizard=false -Dhudson.security.csrf.DefaultCrumbIssuer.EXCLUDE_SESSION_ID=true"
+
+jenkins_plugins: 
+  - "blueocean"
+  - "docker-plugin"
+  - "docker-workflow"
+  - "ansible"
+  - "build-pipeline-plugin"
+  - "git"
+  - "sh-credentials"
+  - "workflow-aggregator"
+  - "scm-api" 
+  - "git-client"
+  - "greenballs"
+  - "docker-build-publish"
+jenkins_plugins_state: present
+jenkins_plugin_updates_expiration: 86400
+jenkins_plugin_timeout: 30
+jenkins_plugins_install_dependencies: true
+jenkins_updates_url: "https://updates.jenkins.io"
+
+jenkins_admin_username: admin
+jenkins_admin_password: admin
+jenkins_admin_password_file: "/var/lib/jenkins/secrets/initialAdminPassword"
+
+jenkins_process_user: jenkins
+jenkins_process_group: "{{ jenkins_process_user }}"
+
+jenkins_init_changes:
+  - option: "JENKINS_ARGS"
+    value: "--prefix={{ jenkins_url_prefix }}"
+  - option: "{{ jenkins_java_options_env_var }}"
+    value: "{{ jenkins_java_options }}"
+
+# If Jenkins is behind a proxy, configure this.
+jenkins_proxy_host: ""
+jenkins_proxy_port: ""
+jenkins_proxy_noproxy:
+  - "127.0.0.1"
+  - "localhost"

@@ -1,0 +1,11 @@
+---
+- name: "Delete invalid DNS resolve file"
+  file:
+    state: absent
+    path: "{{ common.resolv.default }}"
+  
+- name: "Link to proper DNS resolve file"  
+  file:
+    src: "{{ common.resolv.systemd }}"
+    dest: "{{ common.resolv.default }}"
+    state: link

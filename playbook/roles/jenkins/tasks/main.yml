@@ -1,0 +1,18 @@
+---
+# Install Jenkins
+- include_tasks: install.yml
+
+# Configure Jenkins init settings.
+- include_tasks: settings.yml
+
+# Update Jenkins and install configured plugins.
+- include_tasks: plugins.yml
+
+# Configure Jenkins Jobs
+- include_tasks: jobs.yml
+
+# Add Jenkins to Docker group
+- name: Add Jenkins to Docker group
+  user:
+    name: jenkins
+    groups: docker

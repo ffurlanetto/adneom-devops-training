@@ -1,47 +1,20 @@
 pipeline {
-  agent none
+  agent any
   environment {
       registry = "ffurlanetto"
-      registryCredential = 'dockerhub'
     }
   stages {
     stage('Build') {
       agent {
-        label 'openjdk-11'
+        docker {
+          alwaysPull true
+          args '-e HOME=/tmp'
+          image 'openjdk:11-stretch'
+        }
       }
       steps {
         sh './gradlew build'
         stash(allowEmpty: true, name: 'post-build')
-      }
-    }
-    stage('Docker') {
-      agent {
-        label 'docker'
-      }
-      steps {
-        unstash 'post-build'
-        dir(path: 'asgard-rest') {
-            script {
-                docker.build(registry + "/asgard-rest:latest")
-            }
-        }
-
-        dir(path: 'asgard-web') {
-            script {
-                docker.build(registry + "/asgard-web:latest")
-            }
-        }
-      }
-    }
-    stage('Deploy') {
-      agent {
-        label 'docker-slave'
-      }
-      steps {
-        script {
-          sh "/snap/bin/docker-compose up -d"
-          echo 'Open you browser to http://localhost:5580/'
-        }
       }
     }
   }

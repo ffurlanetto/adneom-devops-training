@@ -1,0 +1,5 @@
+---
+common:
+  resolv:
+    default: /etc/resolv.conf
+    systemd: /run/systemd/resolve/resolv.conf

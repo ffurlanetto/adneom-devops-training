@@ -1,0 +1,26 @@
+---
+- name: Install aptitude using apt
+  apt: name=aptitude state=latest update_cache=yes force_apt_get=yes
+
+- name: Install required packages
+  apt: name={{ item }} state=latest update_cache=yes
+  loop: [ 'openjdk-8-jdk-headless']
+
+- name: Add Jenkins GPG apt Key
+  apt_key:
+    url: https://pkg.jenkins.io/debian/jenkins-ci.org.key
+    state: present
+
+- name: Add Jenkins Repository
+  apt_repository:
+    repo: deb http://pkg.jenkins.io/debian-stable binary/
+    state: present
+
+- name: Update apt and install Jenkins
+  apt: update_cache=yes name=jenkins state=latest
+
+- name: Start & Enable Jenkins
+  systemd:
+    name: jenkins
+    state: started
+    enabled: true
