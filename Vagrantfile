@@ -6,6 +6,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     config.vm.box = "generic/ubuntu1904"
     config.vm.network "forwarded_port", guest: 8080, host: 9060
     config.vm.network "forwarded_port", guest: 5580, host: 5580
+    config.vm.network "forwarded_port", guest: 5601, host: 5601
     
     config.vm.provision "ansible" do |ansible|
         ansible.playbook = "playbook/provision.yml"
