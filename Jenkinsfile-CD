@@ -5,8 +5,14 @@ pipeline {
     }
   stages {
     stage('Deploy') {
+      agent {
+        docker {
+          alwaysPull true
+          image 'dzeyelid/ansible-worker'
+        }
+      }
       steps {
-        echo "do nothing"
+        ansiblePlaybook become: true, credentialsId: 'vagrant', disableHostKeyChecking: true, inventory: 'playbook/inventory/localhost', playbook: 'playbook/deploy.yml'
       }
     }
   }
