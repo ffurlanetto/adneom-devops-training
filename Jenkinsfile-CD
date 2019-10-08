@@ -8,7 +8,8 @@ pipeline {
       agent {
         docker {
           alwaysPull true
-          image 'dzeyelid/ansible-worker'
+          args '-e HOME=/tmp -u root:root'
+          image 'mullnerz/ansible-playbook'
         }
       }
       steps {

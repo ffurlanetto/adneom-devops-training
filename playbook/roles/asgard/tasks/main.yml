@@ -1,0 +1,30 @@
+---
+- name: Install dependencies
+  pip:
+    name: docker-compose
+
+- name: Create a directory if it does not exist
+  file:
+    path: /opt/asgard
+    state: directory
+    owner: root
+    group: root
+    mode: '0755'
+
+- name: Copy docker-compose file
+  copy:
+    src: docker-compose.yml
+    dest: /opt/asgard
+    owner: root
+    group: root
+    mode: '0644'
+
+- name: Tear down existing services
+  docker_compose:
+    project_src: /opt/asgard
+    state: absent
+
+- name: Create and start services
+  docker_compose:
+    project_src: /opt/asgard
+  register: output
