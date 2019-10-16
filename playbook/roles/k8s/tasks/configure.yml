@@ -1,0 +1,72 @@
+---
+
+### Install HELM
+- name: Download Helm
+  get_url:
+    url: https://get.helm.sh/helm-v2.14.3-linux-amd64.tar.gz
+    dest: /tmp/helm.tar.gz
+    mode: 0666
+
+- name: Extract helm.tar.gz into /tmp/helm
+  unarchive:
+    src: /tmp/helm.tar.gz
+    dest: /tmp
+    remote_src: yes
+
+- name: Move Helm to /usr/bin
+  copy:
+    src: /tmp/linux-amd64/helm
+    dest: /usr/local/bin/helm
+    remote_src: yes
+    owner: root
+    group: root
+    mode: 0755
+
+- name: Move Tiller to /usr/bin
+  copy:
+    src: /tmp/linux-amd64/tiller
+    dest: /usr/local/bin/tiller
+    remote_src: yes
+    owner: root
+    group: root
+    mode: 0755
+
+- name: Initialize Helm
+  command: 'helm init --history-max 200'
+  become: false
+
+- name: Clean tmp
+  command: rm -rf /tmp/helm*
+
+### Install Dashboard
+- name: Install Dashboard
+  command: 'kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/v2.0.0-beta4/aio/deploy/recommended.yaml'
+  become: false
+
+### Install Ingress NGINX
+- name: Install Ingress NGINX
+  command: 'kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/master/deploy/static/mandatory.yaml'
+  become: false
+
+- name: Copy Ingress MetalLB config
+  copy:
+    src: ingress-metallb.yml
+    dest: /tmp/ingress-metallb.yml
+
+- name: Install Ingress NGINX
+  command: 'kubectl apply -f /tmp/ingress-metallb.yml'
+  become: false
+
+### Install MetalLB (Load Balencer for Bare Metal Cluster)
+- name: Install MetalLB
+  command: 'kubectl apply -f https://raw.githubusercontent.com/google/metallb/v0.8.1/manifests/metallb.yaml'
+  become: false
+
+- name: Copy metalLB config
+  copy:
+    src: metallb.yml
+    dest: /tmp/metallb.yml
+
+- name: Install MetalLB
+  command: 'kubectl apply -f /tmp/metallb.yml'
+  become: false

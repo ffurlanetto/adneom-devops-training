@@ -1,26 +1,50 @@
 # Vagrantfile API/syntax version. Don't touch unless you know what you're doing!
 VAGRANTFILE_API_VERSION = "2"
+IMAGE_NAME = "generic/ubuntu1904"
+N = 2
 
-# Vagrant vm configuration
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
-    config.vm.box = "generic/ubuntu1904"
-    config.vm.network "forwarded_port", guest: 8080, host: 9060
-    config.vm.network "forwarded_port", guest: 5580, host: 5580
-    config.vm.network "forwarded_port", guest: 5601, host: 5601
-    
-    config.vm.provision "ansible" do |ansible|
-        ansible.playbook = "playbook/provision.yml"
-    end  
-    
-    config.vm.provider :virtualbox do |vb|
-        vb.gui = false # change to `true` if you get "Error: Connection timeout." while booting
-        vb.memory = 2048 # warning: this is higher than what our production server has
-        vb.cpus = 2
-        vb.customize [
+    config.vm.provider "virtualbox" do |v|
+        v.gui = false
+        v.memory = 2048
+        v.cpus = 2
+        v.customize [
             'modifyvm', :id,
             '--natdnshostresolver1', 'on',
             "--natdnsproxy1", "on",
             "--nictype1", "virtio"
         ]
     end
-  end
+      
+    config.vm.define "k8s-master" do |master|
+        master.vm.box = IMAGE_NAME
+        master.vm.network "forwarded_port", guest: 8080, host: 80
+        master.vm.network "forwarded_port", guest: 8443, host: 443
+        master.vm.network "private_network", ip: "192.168.50.10"
+        master.vm.hostname = "k8s-master"
+    end
+
+    (1..N).each do |i|
+        config.vm.define "k8s-node-#{i}" do |node|
+            node.vm.box = IMAGE_NAME
+            node.vm.network "forwarded_port", guest: 80, host: "#{i + 18080}"
+            node.vm.network "forwarded_port", guest: 443, host: "#{i + 18443}"
+            node.vm.network "private_network", ip: "192.168.50.#{i + 10}"
+            node.vm.hostname = "k8s-node-#{i}"
+
+            # Only execute once the Ansible provisioner,
+            # when all the machines are up and ready.
+            if i == N
+                node.vm.provision :ansible do |ansible|
+                    # Disable default limit to connect to all the machines
+                    ansible.limit = "all"
+                    ansible.playbook = "playbook/vagrant.yml"
+                    ansible.groups = {
+                        "k8smaster" => ["k8s-master"],
+                        "k8snode" => ["k8s-node-[1:#{N}]"]
+                    }
+                end
+            end
+        end
+    end
+end

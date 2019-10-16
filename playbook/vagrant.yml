@@ -1,0 +1,13 @@
+---
+- hosts: all
+  become: true
+  roles:
+    - common
+    - docker
+    - k8s
+
+- hosts: k8s-master
+  become: false
+  roles:
+    - vagrant-postinstall
+  

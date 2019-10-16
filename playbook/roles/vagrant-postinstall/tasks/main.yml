@@ -1,0 +1,10 @@
+---
+- name: Remove current config file
+  local_action: file path=kube.config state=absent
+    
+- name: Generate kube config
+  command: cat .kube/config
+  register: kube_config
+
+- name: Copy kube config to local file
+  local_action: copy content="{{ kube_config.stdout }}" dest="kube.config"

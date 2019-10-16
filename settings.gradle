@@ -1,5 +1,0 @@
-rootProject.name = 'asgard'
-
-include 'asgard-lib'
-include 'asgard-rest'
-include 'asgard-web'

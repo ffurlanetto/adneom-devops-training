@@ -1,0 +1,33 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: asgard-backend
+  labels:
+    app: asgard-backend
+    tier: backend
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: asgard-backend
+      tier: backend  
+  template:
+    metadata:
+      labels: 
+        app: asgard-backend
+        tier: backend
+    spec:
+      containers:
+      - name: asgard-backend
+        image: ffurlanetto/asgard-rest
+        resources: 
+          requests:
+            memory: "128Mi"
+            cpu: "200m"
+          limits:
+            memory: "512Mi"
+            cpu: "1000m"
+        ports:
+          - containerPort: 18090
+      restartPolicy: Always

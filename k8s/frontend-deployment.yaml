@@ -1,0 +1,33 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: asgard-frontend
+  labels:
+    app: asgard-frontend
+    tier: frontend
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: asgard-frontend
+      tier: frontend 
+  template:
+    metadata:
+      labels: 
+        app: asgard-frontend
+        tier: frontend
+    spec:
+      containers:
+      - name: asgard-frontend
+        image: ffurlanetto/asgard-web:kubernetes     
+        resources: 
+          requests:
+            memory: "128Mi"
+            cpu: "200m"
+          limits:
+            memory: "512Mi"
+            cpu: "1000m"
+        ports:
+          - containerPort: 80
+      restartPolicy: Always

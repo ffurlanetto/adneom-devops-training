@@ -1,0 +1,18 @@
+---
+# Disable SWAP
+- include_tasks: swap.yml
+
+# Install Kubelet, Kubeadm and Kubectl
+- include_tasks: kubelet.yml
+
+# Initialize Master
+- include_tasks: init-master.yml
+  when: "'k8smaster' in group_names"
+
+# Initialize Nodes
+- include_tasks: init-node.yml
+  when: "'k8smaster' not in group_names"
+
+# Configure kubernetes
+- include_tasks: configure.yml
+  when: "'k8smaster' in group_names"

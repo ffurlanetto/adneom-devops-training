@@ -1,0 +1,16 @@
+apiVersion: networking.k8s.io/v1beta1
+kind: Ingress
+metadata:
+  name: asgard-ingress
+spec:
+  rules:
+  - http:
+      paths:      
+      - path: /api
+        backend:
+          serviceName: backend
+          servicePort: 18090
+      - path: /
+        backend:
+          serviceName: frontend
+          servicePort: 5580
